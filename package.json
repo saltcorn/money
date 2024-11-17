@@ -1,0 +1,38 @@
+{
+  "name": "@saltcorn/money",
+  "version": "0.1.0",
+  "description": "Money datatype",
+  "main": "index.js",
+  "dependencies": {
+    "@saltcorn/data": "^0.8.3"
+  },
+  "author": "Tom Nielsen",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^25.1.0",
+    "@saltcorn/data": "^0.0.8"
+  },
+  "repository": "github:saltcorn/money",
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "rules": {
+      "no-unused-vars": "off",
+      "no-case-declarations": "off",
+      "no-empty": "warn",
+      "no-fallthrough": "warn"
+    }
+  }
+}
