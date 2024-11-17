@@ -1,0 +1,2 @@
+# money
+Decimal money type
