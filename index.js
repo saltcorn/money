@@ -1,4 +1,4 @@
-const { div, pre, code, text, textarea } = require("@saltcorn/markup/tags");
+const { input, text_attr } = require("@saltcorn/markup/tags");
 const { features, getState } = require("@saltcorn/data/db/state");
 //const db = require("@saltcorn/data/db");
 const { sqlBinOp } = require("@saltcorn/data/plugin-helper");
@@ -24,7 +24,7 @@ const money = {
           type: "String",
           name: "currencyDisplay",
           label: "Currency display",
-          required: true,          
+          required: true,
           attributes: {
             options: ["symbol", "code", "narrrowSymbol", "name"],
           },
@@ -44,30 +44,29 @@ const money = {
           });
         } else return "";
       },
-
-      edit: {
-        isEdit: true,
-        run: (nm, v, attrs, cls, required, field) => {
-          const id = `input${text_attr(nm)}`;
-          const name = text_attr(nm);
-          return input({
-            type: attrs?.type || "number",
-            inputmode: attrs?.inputmode,
-            pattern: attrs?.pattern,
-            autocomplete: attrs?.autocomplete,
-            class: ["form-control", cls],
-            disabled: attrs.disabled,
-            readonly: attrs.readonly,
-            autofocus: attrs.autofocus,
-            "data-fieldname": text_attr(field.name),
-            name,
-            onChange: attrs.onChange,
-            id,
-            step: "any",
-            required: !!required,
-            ...(isdef(v) && { value: text_attr(v) }),
-          });
-        },
+    },
+    edit: {
+      isEdit: true,
+      run: (nm, v, attrs, cls, required, field) => {
+        const id = `input${text_attr(nm)}`;
+        const name = text_attr(nm);
+        return input({
+          type: attrs?.type || "number",
+          inputmode: attrs?.inputmode,
+          pattern: attrs?.pattern,
+          autocomplete: attrs?.autocomplete,
+          class: ["form-control", cls],
+          disabled: attrs.disabled,
+          readonly: attrs.readonly,
+          autofocus: attrs.autofocus,
+          "data-fieldname": text_attr(field.name),
+          name,
+          onChange: attrs.onChange,
+          id,
+          step: "any",
+          required: !!required,
+          value: text_attr(v),
+        });
       },
     },
   },
