@@ -4,7 +4,12 @@ const { features, getState } = require("@saltcorn/data/db/state");
 const { sqlBinOp } = require("@saltcorn/data/plugin-helper");
 const sql_name_function_allowed = !!sqlBinOp;
 
-const pgvector = {
+const locale = (req) => {
+  //console.log(req && req.getLocale ? req.getLocale() : undefined);
+  return req && req.getLocale ? req.getLocale() : undefined;
+};
+
+const money = {
   name: "Money",
   sql_name: sql_name_function_allowed
     ? ({ decimal_points }) =>
@@ -13,22 +18,57 @@ const pgvector = {
 
   fieldviews: {
     show: {
-      isEdit: false,
-      run: (v) => pre({ class: "wsprewrap" }, code(v)),
-    },
-
-    edit: {
-      isEdit: true,
-      run: (nm, v, attrs, cls) =>
-        textarea(
-          {
-            class: ["form-control", cls],
-            name: encodeURIComponent(nm),
-            id: `input${encodeURIComponent(nm)}`,
-            rows: 10,
+      configFields: [
+        {
+          type: "String",
+          name: "currencyDisplay",
+          label: "Currency display",
+          required: true,
+          showIf: { style: "currency" },
+          attributes: {
+            options: ["symbol", "code", "narrrowSymbol", "name"],
           },
-          typeof v === "undefined" ? "" : text(ppArray(v)) || ""
-        ),
+        },
+      ],
+      isEdit: false,
+      run: (v, req, attrs = {}) => {
+        const v1 = typeof v === "string" ? +v : v;
+        if (typeof v1 === "number") {
+          const locale_ = attrs.locale || locale(req);
+          return v1.toLocaleString(locale_, {
+            style: attrs.currency ? "currency" : "decimal",
+            currency: attrs.currency || undefined,
+            currencyDisplay: attrs.currencyDisplay || "symbol",
+
+            maximumFractionDigits: attrs.decimal_points,
+          });
+        } else return "";
+      },
+
+      edit: {
+        isEdit: true,
+        run: (nm, v, attrs, cls, required, field) => {
+          const id = `input${text_attr(nm)}`;
+          const name = text_attr(nm);
+          return input({
+            type: attrs?.type || "number",
+            inputmode: attrs?.inputmode,
+            pattern: attrs?.pattern,
+            autocomplete: attrs?.autocomplete,
+            class: ["form-control", cls],
+            disabled: attrs.disabled,
+            readonly: attrs.readonly,
+            autofocus: attrs.autofocus,
+            "data-fieldname": text_attr(field.name),
+            name,
+            onChange: attrs.onChange,
+            id,
+            step: "any",
+            required: !!required,
+            ...(isdef(v) && { value: text_attr(v) }),
+          });
+        },
+      },
     },
   },
   attributes: [
@@ -40,6 +80,12 @@ const pgvector = {
       required: true,
       sublabel:
         "Once set this cannot be changed. Number of fractional decimal points",
+    },
+    {
+      type: "String",
+      name: "currency",
+      label: "Currency",
+      sublabel: "Optional. ISO 4217. Example: USD or EUR",
     },
   ],
   read: (v, attrs) => {
@@ -54,7 +100,7 @@ const pgvector = {
 
 module.exports = {
   sc_plugin_api_version: 1,
-  types: [pgvector],
+  types: [money],
   plugin_name: "pgvector",
   /*onLoad() {
     console.log("load");
