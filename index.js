@@ -2,6 +2,7 @@ const { div, pre, code, text, textarea } = require("@saltcorn/markup/tags");
 const { features, getState } = require("@saltcorn/data/db/state");
 //const db = require("@saltcorn/data/db");
 const { sqlBinOp } = require("@saltcorn/data/plugin-helper");
+
 const sql_name_function_allowed = !!sqlBinOp;
 
 const locale = (req) => {
@@ -14,7 +15,7 @@ const money = {
   sql_name: sql_name_function_allowed
     ? ({ decimal_points }) =>
         `decimal(${16 + decimal_points}, ${+decimal_points})`
-    : "vector", //legacy
+    : "decimal(18,2))", //legacy
 
   fieldviews: {
     show: {
@@ -23,8 +24,7 @@ const money = {
           type: "String",
           name: "currencyDisplay",
           label: "Currency display",
-          required: true,
-          showIf: { style: "currency" },
+          required: true,          
           attributes: {
             options: ["symbol", "code", "narrrowSymbol", "name"],
           },
