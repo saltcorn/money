@@ -14,7 +14,7 @@ const money = {
   name: "Money",
   sql_name: sql_name_function_allowed
     ? ({ decimal_points }) =>
-        `decimal(${16 + decimal_points}, ${+decimal_points})`
+        `decimal(${16 + (decimal_points || 2)}, ${+(decimal_points || 2)})`
     : "decimal(18,2))", //legacy
 
   fieldviews: {
