@@ -19,17 +19,42 @@ const money = {
 
   fieldviews: {
     show: {
-      configFields: [
-        {
-          type: "String",
-          name: "currencyDisplay",
-          label: "Currency display",
-          required: true,
-          attributes: {
-            options: ["symbol", "code", "narrrowSymbol", "name"],
+      configFields: (field) => {
+        return [
+          ...(!field?.attributes?.currency
+            ? [
+                {
+                  type: "String",
+                  name: "currency",
+                  label: "Currency",
+                  sublabel: "Optional. ISO 4217. Example: USD or EUR",
+                },
+              ]
+            : []),
+          ...(!field?.attributes?.decimal_points
+            ? [
+                {
+                  label: "Decimal points",
+                  name: "decimal_points",
+                  type: "Integer",
+                  default: 2,
+                  required: true,
+                  sublabel:
+                    "Once set this cannot be changed. Number of fractional decimal points",
+                },
+              ]
+            : []),
+          {
+            type: "String",
+            name: "currencyDisplay",
+            label: "Currency display",
+            required: true,
+            attributes: {
+              options: ["symbol", "code", "narrrowSymbol", "name"],
+            },
           },
-        },
-      ],
+        ];
+      },
       isEdit: false,
       run: (v, req, attrs = {}) => {
         const v1 = typeof v === "string" ? +v : v;
