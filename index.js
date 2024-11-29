@@ -115,6 +115,7 @@ const money = {
   read: (v, attrs) => {
     switch (typeof v) {
       case "string":
+        if (v === "") return null;
         return +v;
       default:
         return v;
