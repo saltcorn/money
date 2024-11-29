@@ -59,7 +59,7 @@ const money = {
       run: (v, req, attrs = {}) => {
         const v1 = typeof v === "string" ? +v : v;
         if (typeof v1 === "number") {
-          const locale_ = attrs.locale || locale(req);
+          const locale_ = attrs.locale || locale(req) || "en";
           return v1.toLocaleString(locale_, {
             style: attrs.currency ? "currency" : "decimal",
             currency: attrs.currency || undefined,
