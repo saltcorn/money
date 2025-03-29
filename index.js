@@ -112,6 +112,7 @@ const money = {
       sublabel: "Optional. ISO 4217. Example: USD or EUR",
     },
   ],
+  readFromDB: (v) => (typeof v === "string" ? +v : v),
   read: (v, attrs) => {
     switch (typeof v) {
       case "string":
@@ -126,7 +127,7 @@ const money = {
 module.exports = {
   sc_plugin_api_version: 1,
   types: [money],
-  plugin_name: "pgvector",
+  plugin_name: "money",
   /*onLoad() {
     console.log("load");
     db.pool.on("connect", async function (client) {
